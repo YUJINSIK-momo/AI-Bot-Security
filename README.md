@@ -102,7 +102,7 @@ plugins/bot-defense/
 ├── skills/          bot-defense · stack-detect · exposure-audit · aws-bot-defense · log-watch
 ├── agents/          bot-defense-auditor.md
 ├── hooks/           hooks.json(클라우드 변경 명령 확인)
-├── scripts/         detect-stack · probe-site · aws-inventory · insights-query · guard-cloud-mutation
+├── scripts/         detect-stack · probe-site · aws-inventory · insights-query · log-count · guard-cloud-mutation
 ├── data/            ai-user-agents.tsv(AI 봇 이름 한 곳)
 ├── references/      threats · ai-user-agents · config · report-template · hosting/ · frameworks/ · aws/
 └── templates/       aws/(WAF Count 모드 · 경보 Terraform) · nextjs/robots.ts
@@ -116,6 +116,11 @@ tools/check.sh
 ```
 
 플러그인 검증(`--strict`), shellcheck, JSON, Terraform 형식, 스크립트 시험을 돌립니다. 시험은 가짜 저장소와 가짜 `aws` 를 써서 네트워크와 AWS 없이 돕니다.
+
+## 변경 기록
+
+- **0.1.1** — AWS 점검이 권한 없는 항목을 「없음」 대신 `unknown` 으로 적는다. Logs Insights 를 못 쓰는 저장소용 `log-count.sh`(원문 없이 종류별 수). 노출 점검에 LLM 캐시 오염 · 내부 중계 IP · 처리방침 보관 문구 · 개발용 주소가 등록된 운영 키를 더했다. 읽기 전용 정책에 `logs:FilterLogEvents`.
+- **0.1.0** — 첫 판.
 
 ## 다음에 할 것
 

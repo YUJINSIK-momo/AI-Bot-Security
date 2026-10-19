@@ -22,8 +22,9 @@ describe · list · get 만 부른다. 결과:
 - `regions[].albs`: 인터넷용 ALB, 붙은 웹 ACL, 접근 로그
 - `regions[].web_acls`, `cloudfront.web_acls`: 규칙(관리형 그룹 · Bot Control 단계 · 속도 규칙 · count/block), 로그 설정
 - `regions[].log_groups`, `waf_log_groups`, `alarms`
-- `gaps`: 바로 보이는 빈 곳
+- `gaps`: 바로 보이는 빈 곳(읽은 값에서만 만든다)
 - `errors`: 권한이 없어 못 읽은 것 — 보고서에 「확인 못 함」으로 적는다
+- 값이 `"unknown"` 이면 **권한이 없어 못 읽은 것**이다. 「없음 · 꺼짐」으로 적지 않는다. 그 부분은 코드(Terraform)와 운영 응답으로 따로 판단하고, 근거를 그렇게 밝힌다
 
 ## 2. 고르기
 

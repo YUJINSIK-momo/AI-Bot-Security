@@ -20,6 +20,10 @@ argument-hint: "[기간 예: 15m · 1h · 1d]"
 
 ## 2. 돌리기
 
+**먼저 그 저장소의 규칙을 본다.** CLAUDE.md · `.claude/settings.json` 이 `aws logs start-query`(Logs Insights)를 막거나, 권한이 없어 시작이 거절되면 **2-B** 로 간다.
+
+### 2-A. Logs Insights
+
 쿼리는 `${CLAUDE_PLUGIN_ROOT}/references/aws/insights-queries.md` 에서 고른다. 기본 묶음: W1(한눈에) · W2(/api 상위 IP) · W4(AI 봇 이름) · W5(Bot Control 범주). 앱 로그가 있으면 A1(429 · 403).
 
 ```
@@ -28,6 +32,15 @@ ${CLAUDE_PLUGIN_ROOT}/scripts/insights-query.sh --profile <프로필> --region <
 ```
 
 쿼리마다 따로 돌린다(한 번에 하나). 60초 안에 안 끝나면 스크립트가 멈춘다.
+
+### 2-B. 수만 세기(Logs Insights 를 못 쓸 때)
+
+```
+${CLAUDE_PLUGIN_ROOT}/scripts/log-count.sh --profile <프로필> --region <리전> \
+  --log-group <그룹> --since 1h --pattern '?limited ?busy ?429'
+```
+
+`filter-log-events`(읽기)로 줄을 받아 원문 없이 종류별 수만 낸다. JSON 로그면 `msg` · `outcome` 으로 묶는다. 패턴은 그 앱이 상한 · 거절 때 남기는 말에 맞춘다(코드에서 로그 문구를 먼저 찾는다). 앱이 요청마다 상태 코드를 남기지 않으면 429 수는 셀 수 없다 — 그 자체를 탐지 공백으로 보고서에 적는다.
 
 ## 3. 읽고 판단하기
 

@@ -84,6 +84,10 @@ cat > "$tmp/bin/aws" <<'FAKE'
 #!/usr/bin/env bash
 # 시험용 가짜 aws — 받은 인자로 정해 둔 JSON 을 낸다.
 args="$*"
+if [ -n "${FAKE_DENY:-}" ] && printf '%s' "$args" | grep -Eq "$FAKE_DENY"; then
+  echo "An error occurred (AccessDeniedException) when calling the operation" >&2
+  exit 254
+fi
 case "$args" in
   *"sts get-caller-identity"*) echo '{"Account":"123456789012","Arn":"arn:aws:sts::123456789012:assumed-role/ReadOnly/me"}' ;;
   *"elbv2 describe-load-balancers"*) echo '{"LoadBalancers":[{"LoadBalancerArn":"arn:alb/1","LoadBalancerName":"web","Scheme":"internet-facing","DNSName":"web.elb","Type":"application"}]}' ;;
@@ -101,6 +105,7 @@ case "$args" in
   *"wafv2 list-web-acls --scope CLOUDFRONT"*) echo '{"WebACLs":[]}' ;;
   *"shield get-subscription-state"*) echo '{"SubscriptionState":"INACTIVE"}' ;;
   *"logs start-query"*) echo '{"queryId":"q1"}' ;;
+  *"logs filter-log-events"*) echo '{"events":[{"message":"{\"level\":\"info\",\"message\":{\"msg\":\"chat-ai\",\"outcome\":\"limited\"}}"},{"message":"{\"msg\":\"pdf\",\"outcome\":\"busy\"}"},{"message":"{\"msg\":\"pdf\",\"outcome\":\"busy\"}"},{"message":"plain text"}]}' ;;
   *"logs get-query-results"*) echo '{"status":"Complete","results":[[{"field":"action","value":"COUNT"},{"field":"requests","value":"7"},{"field":"@ptr","value":"x"}]],"statistics":{"recordsMatched":7}}' ;;
   *) echo "{}" ;;
 esac
@@ -111,6 +116,11 @@ printf '%s' "$inv" | jq -e '.identity.account == "****9012"' >/dev/null && ok "i
 printf '%s' "$inv" | jq -e '[.gaps[] | select(test("WAF 가 없다"))] | length == 1' >/dev/null && ok "inventory ALB WAF 빈 곳" || bad "inventory ALB WAF 빈 곳"
 printf '%s' "$inv" | jq -e '[.gaps[] | select(test("Bot Control 이 없다"))] | length == 1' >/dev/null && ok "inventory Bot Control 빈 곳" || bad "inventory Bot Control 빈 곳"
 printf '%s' "$inv" | jq -e '.regions[0].web_acls[0].logging == "off"' >/dev/null && ok "inventory 로그 꺼짐" || bad "inventory 로그 꺼짐"
+deny="$(PATH="$tmp/bin:$PATH" FAKE_DENY='get-web-acl-for-resource|describe-load-balancer-attributes|list-web-acls' "$scripts/aws-inventory.sh" --region ap-northeast-2)"
+printf '%s' "$deny" | jq -e '.regions[0].albs[0].web_acl == "unknown" and .regions[0].albs[0].access_logs == "unknown" and .regions[0].web_acls == "unknown"' >/dev/null && ok "inventory 권한 없음은 unknown" || bad "inventory 권한 없음은 unknown"
+printf '%s' "$deny" | jq -e '(.gaps | length) == 0 and (.errors | length) >= 3' >/dev/null && ok "inventory 권한 없음을 빈 곳으로 적지 않음" || bad "inventory 권한 없음을 빈 곳으로 적지 않음"
+lc="$(PATH="$tmp/bin:$PATH" "$scripts/log-count.sh" --log-group g --since 1h --pattern '?limited ?busy')"
+printf '%s' "$lc" | jq -e '.matched == 4 and (.kinds[0] == {kind: "pdf / busy", n: 2}) and ([.kinds[].kind] | index("non-json") != null) and (tostring | test("plain text") | not)' >/dev/null && ok "log-count 종류별 수 · 원문 없음" || bad "log-count 종류별 수 · 원문 없음"
 q="$(PATH="$tmp/bin:$PATH" "$scripts/insights-query.sh" --log-group g --since 15m --query 'stats count(*)')"
 printf '%s' "$q" | jq -e '.status == "Complete" and .rows[0].requests == "7" and (.rows[0] | has("@ptr") | not)' >/dev/null && ok "insights 결과 모양" || bad "insights 결과 모양"
 
