@@ -1,0 +1,28 @@
+# AI 봇 User-Agent 토큰 — robots.txt 와 탐지 스크립트가 함께 쓰는 한 곳이다.
+# 형식: 묶음<TAB>토큰<TAB>운영사<TAB>설명
+# 묶음: training(학습용 수집) · search(AI 검색 색인) · user(사용자 요청으로 페이지를 읽음)
+# 이름은 회사마다 바뀐다. 마지막 확인: 2026-10. 고칠 때 references/ai-user-agents.md 도 함께 본다.
+training	GPTBot	OpenAI	모델 학습용 수집
+training	ClaudeBot	Anthropic	모델 학습용 수집
+training	anthropic-ai	Anthropic	예전 토큰
+training	CCBot	Common Crawl	공개 말뭉치 — 여러 모델 학습에 쓰인다
+training	Google-Extended	Google	Gemini 학습·근거 사용 여부(크롤러가 아니라 robots 토큰)
+training	Applebot-Extended	Apple	Apple 생성형 AI 학습 사용 여부(robots 토큰)
+training	Bytespider	ByteDance	학습용 수집
+training	meta-externalagent	Meta	AI 학습·제품용 수집
+training	cohere-ai	Cohere	학습용 수집
+training	Amazonbot	Amazon	Alexa 답변·AI 용 수집
+training	Diffbot	Diffbot	지식 그래프 수집
+training	Omgilibot	Webz.io	데이터 판매용 수집
+training	Timpibot	Timpi	검색·학습용 수집
+training	ImagesiftBot	Hive	이미지 수집
+search	OAI-SearchBot	OpenAI	ChatGPT 검색 색인
+search	Claude-SearchBot	Anthropic	Claude 검색 색인
+search	PerplexityBot	Perplexity	Perplexity 검색 색인
+search	YouBot	You.com	AI 검색 색인
+search	DuckAssistBot	DuckDuckGo	AI 답변용 수집
+user	ChatGPT-User	OpenAI	사용자가 ChatGPT 에 시킨 페이지 읽기
+user	Claude-User	Anthropic	사용자가 Claude 에 시킨 페이지 읽기
+user	Perplexity-User	Perplexity	사용자가 Perplexity 에 시킨 페이지 읽기
+user	MistralAI-User	Mistral	사용자가 Le Chat 에 시킨 페이지 읽기
+user	meta-externalfetcher	Meta	사용자 요청으로 링크 읽기

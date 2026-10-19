@@ -1,0 +1,16 @@
+{
+  "name": "bot-defense",
+  "version": "0.1.0",
+  "description": "호스팅 · 프레임워크를 판별해 AI 봇 · 크롤링 · 무단 복제 · 비용 남용 노출을 점검하고, AWS WAF · 로그 감시까지 대응안을 내는 스킬 · 에이전트 · 안전 훅. 클라우드는 읽기만 하고 바꾸는 명령은 사람에게 묻는다.",
+  "author": { "name": "YUJINSIK-momo" },
+  "homepage": "https://github.com/YUJINSIK-momo/AI-Bot-Security",
+  "repository": "https://github.com/YUJINSIK-momo/AI-Bot-Security",
+  "keywords": ["bot", "crawler", "scraping", "waf", "aws", "security", "robots"],
+  "userConfig": {
+    "aws_profile": {
+      "type": "string",
+      "title": "AWS 프로필",
+      "description": "읽기 전용 권한(references/aws/iam-readonly-policy.json)이 있는 AWS CLI 프로필 이름. 로그인은 직접 한다(예: aws sso login --profile 이름)."
+    }
+  }
+}
