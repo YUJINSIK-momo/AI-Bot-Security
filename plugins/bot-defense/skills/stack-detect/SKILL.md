@@ -7,7 +7,7 @@ allowed-tools: Bash(${CLAUDE_PLUGIN_ROOT}/scripts/detect-stack.sh *)
 
 # 스택 판별
 
-1. 저장소 경로(기본: 지금 폴더)와 운영 주소를 정한다. 주소는 `.bot-defense.json` 의 `site_url` 이나 사용자에게서. 주소가 없어도 돌릴 수 있다(저장소만 본다).
+1. 저장소 경로(기본: 지금 폴더)와 운영 주소를 정한다. 주소는 프로젝트 설정(`.bot-defense.json` 또는 `.claude/bot-defense.json`)의 `site_url` 이나 사용자에게서. 주소가 없어도 돌릴 수 있다(저장소만 본다).
 2. 돌린다:
 
    ```

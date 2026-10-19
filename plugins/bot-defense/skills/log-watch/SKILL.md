@@ -14,13 +14,13 @@ argument-hint: "[기간 예: 15m · 1h · 1d]"
 
 ## 1. 무엇을 볼지
 
-- 로그 그룹: `.bot-defense.json` 의 `logs.waf` · `logs.app` → `aws-bot-defense` 결과의 `waf_log_groups` · `log_groups` → 묻는다.
+- 로그 그룹: 프로젝트 설정(`.bot-defense.json` 또는 `.claude/bot-defense.json`)의 `logs.waf` · `logs.app` → `aws-bot-defense` 결과의 `waf_log_groups` · `log_groups` → 묻는다.
 - 기간: 인자(기본 15m). 비교를 위해 같은 길이의 바로 앞 기간도 본다.
 - 프로필 · 리전: `aws-bot-defense` 의 0단계와 같다. 로그인은 사용자가 한다.
 
 ## 2. 돌리기
 
-**먼저 그 저장소의 규칙을 본다.** CLAUDE.md · `.claude/settings.json` 이 `aws logs start-query`(Logs Insights)를 막거나, 권한이 없어 시작이 거절되면 **2-B** 로 간다.
+**먼저 그 저장소의 규칙을 본다.** 프로젝트 설정의 `logs.insights` 가 `false` 이거나, CLAUDE.md · `.claude/settings.json` 이 `aws logs start-query`(Logs Insights)를 막거나, 권한이 없어 시작이 거절되면 **2-B** 로 간다.
 
 ### 2-A. Logs Insights
 

@@ -56,7 +56,7 @@ Claude Code 안에서:
 
 ### 설정
 
-- **팀 공통**(커밋해도 되는 값): 그 저장소 루트의 `.bot-defense.json` — 운영 주소, 볼 리전, 로그 그룹, 변경 규칙, 보고서 위치. 형식은 [`references/config.md`](plugins/bot-defense/references/config.md).
+- **팀 공통**(커밋해도 되는 값): 그 저장소 루트의 `.bot-defense.json`(또는 `.claude/bot-defense.json`) — 운영 주소, 볼 리전, 로그 그룹, 변경 규칙, 보고서 위치. 형식은 [`references/config.md`](plugins/bot-defense/references/config.md).
 - **개인**: `claude plugin configure bot-defense@ai-bot-security` → `aws_profile`(읽기 전용 권한의 프로필 이름).
 - **AWS 권한**: [`references/aws/iam-readonly-policy.json`](plugins/bot-defense/references/aws/iam-readonly-policy.json)(describe · list · get · Logs Insights 조회만).
 - **로그인**은 사용자가 자기 터미널에서 합니다(예: `aws sso login --profile 이름`).
@@ -119,6 +119,7 @@ tools/check.sh
 
 ## 변경 기록
 
+- **0.1.2** — 프로젝트 설정을 `.claude/bot-defense.json` 에도 둘 수 있다(루트 새 파일이 배포 판단에 걸리는 저장소용). `logs.insights: false` 면 Logs Insights 대신 수만 센다.
 - **0.1.1** — AWS 점검이 권한 없는 항목을 「없음」 대신 `unknown` 으로 적는다. Logs Insights 를 못 쓰는 저장소용 `log-count.sh`(원문 없이 종류별 수). 노출 점검에 LLM 캐시 오염 · 내부 중계 IP · 처리방침 보관 문구 · 개발용 주소가 등록된 운영 키를 더했다. 읽기 전용 정책에 `logs:FilterLogEvents`.
 - **0.1.0** — 첫 판.
 

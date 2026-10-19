@@ -1,6 +1,8 @@
 # 설정 — 어디에 무엇을 두나
 
-## 프로젝트 설정 `.bot-defense.json`(소비 저장소 루트, 선택)
+## 프로젝트 설정(소비 저장소, 선택)
+
+자리는 둘 중 하나다: 저장소 루트의 `.bot-defense.json`, 또는 `.claude/bot-defense.json`. 둘 다 있으면 루트 것을 쓴다. 루트에 새 파일을 두면 배포 판단(바뀐 파일로 배포할지 정하는 규칙)에 걸리는 저장소는 `.claude/` 쪽에 둔다.
 
 팀이 같이 쓰는 값만 둔다. 비밀값(키 · 토큰)은 두지 않는다. 저장소에 커밋해도 되는 값이다.
 
@@ -10,7 +12,8 @@
   "aws": { "regions": ["ap-northeast-2"] },
   "logs": {
     "waf": ["aws-waf-logs-example"],
-    "app": ["/ecs/example-api"]
+    "app": ["/ecs/example-api"],
+    "insights": true
   },
   "internal_clients": "서버 PDF 렌더러가 /api 를 부른다 — 상한에서 빼야 한다",
   "change_policy": "AWS 를 바꾸기 전에 팀 변경 기록에 먼저 적고 확인받는다",
@@ -23,6 +26,7 @@
 | `site_url` | 지킬 운영 주소 |
 | `aws.regions` | 볼 리전. CloudFront 는 늘 us-east-1 을 함께 본다 |
 | `logs.waf` · `logs.app` | `log-watch` 가 볼 로그 그룹 |
+| `logs.insights` | `false` 면 Logs Insights(`start-query`)를 쓰지 않고 `log-count.sh`(수만 세기)로 본다. 저장소 규칙이 `start-query` 를 막으면 `false` 로 둔다. 기본 `true` |
 | `internal_clients` | 공개 경로를 부르는 서버 내부 클라이언트 설명 |
 | `change_policy` | 클라우드를 바꾸기 전에 지킬 팀 규칙 — 스킬이 제안 끝에 적는다 |
 | `report_dir` | 보고서를 둘 곳. 없으면 매번 묻는다. 저장소 안 · 공개 저장소에는 두지 않는다 |
@@ -40,6 +44,6 @@ AWS 로그인은 사용자가 자기 터미널에서 한다(예: `aws sso login 
 ## 값을 찾는 순서
 
 1. 사용자가 이번 대화에서 준 값
-2. `.bot-defense.json`
+2. 프로젝트 설정(`.bot-defense.json`, 없으면 `.claude/bot-defense.json`)
 3. 플러그인 옵션
 4. 그래도 없으면 묻는다
